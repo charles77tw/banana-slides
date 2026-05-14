@@ -6,7 +6,7 @@ import logging
 import os
 import subprocess
 import traceback
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 
 from flask import Blueprint, request, jsonify, current_app, Response, stream_with_context
@@ -149,7 +149,7 @@ def _smart_merge_pages(project_id, pages_data):
         if description_text:
             desc_content = {
                 'text': description_text,
-                'generated_at': datetime.now(timezone.utc).replace(tzinfo=None).isoformat(),
+                'generated_at': datetime.utcnow().isoformat(),
             }
             if page_data.get('extra_fields'):
                 desc_content['extra_fields'] = page_data['extra_fields']
