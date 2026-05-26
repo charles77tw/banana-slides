@@ -12,17 +12,17 @@ ARG NPM_REGISTRY=
 WORKDIR /app
 
 # 复制 package.json
-COPY frontend/package.json ./
+COPY package.json ./
 
 # 安装依赖（如果配置了 NPM_REGISTRY，先设置镜像源）
-COPY frontend/package-lock.json* ./
+COPY package-lock.json* ./
 RUN if [ -n "$NPM_REGISTRY" ]; then \
         npm config set registry "$NPM_REGISTRY"; \
     fi && \
     (npm install --frozen-lockfile || npm install)
 
 # 复制前端源代码
-COPY frontend/ ./
+COPY . ./
 
 # 构建应用
 RUN npm run build
@@ -35,7 +35,7 @@ FROM ${DOCKER_REGISTRY:-}nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 # 复制 nginx 配置文件
-COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # 暴露端口
 EXPOSE 80
